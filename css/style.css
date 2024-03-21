@@ -1,0 +1,26 @@
+body
+{
+    background-image: url(../pics/m2.jpg);
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+.titre
+{
+    color: brown;
+    font-family : 'Dancing Script';
+    font-style: oblique;
+}
+h3
+{
+    color: black;
+}
+footer
+{
+    height: 54px;
+    position: absolute;
+    bottom: 0;
+    background-color: black;
+    width: 100%;
+    color: white; 
+    text-align: center;
+} 

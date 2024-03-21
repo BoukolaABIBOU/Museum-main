@@ -1,0 +1,140 @@
+<?php 
+    require '../database.php'; 
+    require '../class.php';
+
+    if($_SERVER["REQUEST_METHOD"]== "POST" && !empty($_POST))
+    { 
+        //on initialise nos messages d'erreurs; 
+        $nomSiteError=''; 
+        $anneedecouvError=''; 
+        $codePaysError =''; 
+        // on recupère nos valeurs 
+        $nomSite=htmlentities(trim($_POST['nomSite'])); 
+        $anneedecouv = htmlentities(trim($_POST['anneedecouv'])); 
+        $codePays=htmlentities(trim($_POST['codePays'])); 
+        // on vérifie nos champs 
+        $valid = true; 
+        if ($anneedecouv < 0)
+        {
+            $anneedecouvError = "Entrez une valeur supérieure à 0";
+            $valid=false;
+        }  
+        if ($codePays < 0)
+        {
+            $codePaysError = "Entrez une valeur supérieure à 0";
+            $valid=false;
+        } 
+         // si les données sont présentes et bonnes, on se connecte à la base 
+         if ($valid) 
+         { 
+            $conn = Database::connect();
+            // Insertion des données dans la base
+			$req = $conn -> prepare('INSERT INTO Site (nomSite, anneedecouv, codePays) VALUES (:nS, :aD, :cP)');
+            $s =  new Site();
+            $s -> hydrate($_POST);
+
+			$req ->execute(array(
+			'nS' => $s -> getNomSite(),
+			'aD' => $s -> getAnneedecouv(),
+			'cP' => $s -> getCodePays()  
+		));
+            Database::disconnect();
+            header("Location: Site.php");
+        }
+    }
+?>
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <title>Ajouter un Site</title>
+        <link rel="stylesheet" type="text/css" href="../css/gestion.css">
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    </head>
+    <body>
+
+
+
+<br />
+<div class="container">
+
+<br />
+<div class="row">
+
+<br />
+<h3>Ajouter un Site</h3>
+<p>
+
+</div>
+<p>
+
+<br />
+<form method="post" action="addSite.php">
+
+
+<br />
+<div class="control-group<?php echo !empty($nomSiteError)?'error':'';?>">
+                    <label class="control-label">NomSite</label>
+
+<br />
+<div class="controls">
+                            <input type="text" name="nomSite" value="<?php echo !empty($nomSite)?$nomSite:''; ?>" required>
+                            <?php if(!empty($nomSiteError)):?>
+                            <span class="help-inline"><?php echo $nomSiteError ;?></span>
+                            <?php endif;?>
+</div>
+<p>
+
+</div>
+<p>
+
+<br />
+<div class="control-group <?php echo !empty($anneedecouvError)?'error':'';?>">
+                        <label class="control-label">Anneedecouv</label>
+
+<br />
+<div class="controls">
+                            <input name="anneedecouv" type="number"  value="<?php echo !empty($anneedecouv)?$anneedecouv:'';?>" required>
+                            <?php if (!empty($anneedecouvError)): ?>
+                                <span class="help-inline"><?php echo $anneedecouvError;?></span>
+                            <?php endif; ?>
+</div>
+<p>
+
+</div>
+<p>                                               
+
+<br />
+<div class="control-group <?php echo !empty($codePaysError)?'error':'';?>">
+                        <label class="control-label">CodePays</label>
+
+<br />
+<div class="controls">
+                            <input name="codePays" type="number"  value="<?php echo !empty($codePays)?$codePays:'';?>" required>
+                            <?php if (!empty($codePaysError)): ?>
+                                <span class="help-inline"><?php echo $codePaysError;?></span>
+                            <?php endif; ?>
+</div>
+<p>
+
+</div>
+<p>
+
+<br />
+<div class="form-actions">
+                 <input type="submit" class="btn btn-success" name="submit" value="submit">
+                 <a class="btn btn-light" href="Site.php">Retour</a>
+</div>
+<p>
+
+            </form>
+<p>
+            
+            
+            
+</div>
+<p>
+
+        
+    </body>
+</html>
